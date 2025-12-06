@@ -1,0 +1,53 @@
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from functools import reduce
+from pyspark.sql import DataFrame
+import os 
+
+
+spark=SparkSession.builder.appName("FRS PROJECT").getOrCreate()
+spark.sparkContext.setLogLevel("ERROR")   
+
+def validate_dataframe (df,
+                       n_cols=None,
+                       check_duplicate= False,
+                       check_null=False):
+    
+    if n_cols and len(df.columns)!=n_cols:
+        return False,f"Expected{n_cols}columns but got{len(df.columns)}"
+    
+    if check_duplicate and df.count()!=df.dropDuplicates().count():
+        return False,"Duplicates found"
+    
+    if check_null and df.filter(df.isNull()).count()>0:
+        return False,"Null Values Founds"
+     
+    return True,"DataFrame Passed Validation"
+    
+model_config=spark.read.csv("E:\Project\FRS\data\model_config.csv",header=True,inferSchema=True)
+model_config.show(5)
+
+model_collateral=spark.read.csv("E:\Project\FRS\data\model_collateral.csv",header=True,inferSchema=True)
+model_collateral.show(5)
+
+# print(model_authorrep.columns)
+# print("col_count",len(model_config,n_cols=4,check_duplication=True))
+# # print(is_valid,message)
+
+dff=validate_dataframe(model_config,n_cols=4,check_duplicate=True)
+print(dff)
+dff1=validate_dataframe(model_collateral,n_cols=78,check_duplicate=True)
+print(dff1)
+
+path="E:\Project\FRS\data\model_auth_Rep"
+ssv=[f for f in os.listdir(path)if f.endswith(".csv")]
+
+for file in ssv: 
+    df=spark.read.csv(os.path.join(path,file),header=True, inferSchema=True)
+
+for df in df:
+    dff2=validate_dataframe(df,n_cols=14,check_duplicate=True)
+    print(dff2)
+
+# df=reduce(DataFrame,unionByName,dfs)
+# Concatenate all DataFrame

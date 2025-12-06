@@ -1,451 +1,317 @@
-import pandas as pd
-
-aa=pd.read_excel("C:\\Users\\prati\\Desktop\\ecl_dataframe3.xlsx")
-# print(aa)
-
-import pandas as pd
-import numpy as np
-
-# 1. Creating DataFrames (Different Methods)
-
-
-# From dictionary
-data = {
-    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva'],
-    'Age': [25, 30, 35, 40, 45],
-    'City': ['NY', 'LA', 'Chicago', 'Houston', 'Miami'],
-    'Salary': [70000, 80000, 90000, 100000, 110000]
-}
-df = pd.DataFrame(data)
-
-# From list of lists
-data_list = [
-    ['Alice', 25, 'NY', 70000],
-    ['Bob', 30, 'LA', 80000],
-    ['Charlie', 35, 'Chicago', 90000],
-    ['David', 40, 'Houston', 100000],
-    ['Eva', 45, 'Miami', 110000]
-]
-df_list = pd.DataFrame(data_list, columns=['Name', 'Age', 'City', 'Salary'])
-
-# From CSV
-# df_csv = pd.read_csv('data.csv')
-
-# From Excel
-# df_excel = pd.read_excel('data.xlsx')
-
-# From numpy array
-arr = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-df_arr = pd.DataFrame(arr, columns=['A', 'B', 'C'])
-
-print("Original DataFrame:")
-print(df)
-print("\n")
-
-# =============================================
-# 2. Basic DataFrame Operations
-# =============================================
-
-# Display first n rows
-print("First 2 rows:")
-print(df.head(2))
-print("\n")
-
-# Display last n rows
-print("Last 2 rows:")
-print(df.tail(2))
-print("\n")
-
-# DataFrame info
-print("DataFrame info:")
-print(df.info())
-print("\n")
-
-# DataFrame description
-print("DataFrame description:")
-print(df.describe())
-print("\n")
-
-# DataFrame shape
-print("DataFrame shape:", df.shape)
-print("\n")
-
-# DataFrame columns
-print("DataFrame columns:", df.columns.tolist())
-print("\n")
-
-# DataFrame index
-print("DataFrame index:", df.index)
-print("\n")
-
-# =============================================
-# 3. Selecting Data
-# =============================================
-
-# Select column
-print("Name column:")
-print(df['Name'])
-print("\n")
-
-# Select multiple columns
-print("Name and Age columns:")
-print(df[['Name', 'Age']])
-print("\n")
-
-# Select rows by index
-print("Row at index 2:")
-print(df.iloc[2])
-print("\n")
-
-# Select rows by condition
-print("People older than 30:")
-print(df[df['Age'] > 30])
-print("\n")
-
-# Select rows and columns
-print("Name of people older than 30:")
-print(df.loc[df['Age'] > 30, 'Name'])
-print("\n")
-
-# =============================================
-# 4. Data Manipulation
-# =============================================
-
-# Add new column
-df['Senior'] = df['Age'] > 35
-print("DataFrame with Senior column:")
-print(df)
-print("\n")
-
-# Modify column
-df['Salary'] = df['Salary'] * 1.1  # 10% raise
-print("DataFrame with updated Salary:")
-print(df)
-print("\n")
-
-# Delete column
-df.drop('Senior', axis=1, inplace=True)
-print("DataFrame after dropping Senior column:")
-print(df)
-print("\n")
-
-# Rename columns
-df.rename(columns={'City': 'Location'}, inplace=True)
-print("DataFrame with renamed columns:")
-print(df)
-print("\n")
-
-# Sort values
-df_sorted = df.sort_values('Age', ascending=False)
-print("DataFrame sorted by Age:")
-print(df_sorted)
-print("\n")
-
-# =============================================
-# 5. Handling Missing Data
-# =============================================
-
-# Create DataFrame with missing values
-df_missing = pd.DataFrame({
-    'A': [1, 2, np.nan, 4],
-    'B': [5, np.nan, np.nan, 8],
-    'C': [10, 20, 30, 40]
-})
-
-print("DataFrame with missing values:")
-print(df_missing)
-print("\n")
-
-# Check for missing values
-print("Missing values:")
-print(df_missing.isna())
-print("\n")
-
-# Fill missing values
-df_filled = df_missing.fillna(value={'A': 0, 'B': 99})
-print("DataFrame with filled missing values:")
-print(df_filled)
-print("\n")
-
-# Drop rows with missing values
-df_dropped = df_missing.dropna()
-print("DataFrame after dropping rows with missing values:")
-print(df_dropped)
-print("\n")
-
-# =============================================
-# 6. Grouping and Aggregation
-# =============================================
-
-# Create DataFrame for grouping
-df_group = pd.DataFrame({
-    'Department': ['HR', 'Tech', 'HR', 'Tech', 'Finance', 'Finance'],
-    'Employee': ['Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Frank'],
-    'Salary': [70000, 80000, 90000, 100000, 110000, 120000]
-})
-
-print("Grouping DataFrame:")
-print(df_group)
-print("\n")
-
-# Group by department
-grouped = df_group.groupby('Department')
-
-# Aggregate functions
-print("Average salary by department:")
-print(grouped['Salary'].mean())
-print("\n")
-
-print("Salary statistics by department:")
-print(grouped['Salary'].describe())
-print("\n")
-
-# Multiple aggregations
-print("Multiple aggregations:")
-print(grouped['Salary'].agg(['mean', 'sum', 'count', 'max', 'min']))
-print("\n")
-
-# =============================================
-# 7. Merging, Joining, and Concatenating
-# =============================================
-
-# Create DataFrames to merge
-df1 = pd.DataFrame({
-    'ID': [1, 2, 3],
-    'Name': ['Alice', 'Bob', 'Charlie']
-})
-
-df2 = pd.DataFrame({
-    'ID': [2, 3, 4],
-    'Salary': [80000, 90000, 100000]
-})
-
-# Inner join
-print("Inner join:")
-print(pd.merge(df1, df2, on='ID', how='inner'))
-print("\n")
-
-# Left join
-print("Left join:")
-print(pd.merge(df1, df2, on='ID', how='left'))
-print("\n")
-
-# Right join
-print("Right join:")
-print(pd.merge(df1, df2, on='ID', how='right'))
-print("\n")
-
-# Outer join
-print("Outer join:")
-print(pd.merge(df1, df2, on='ID', how='outer'))
-print("\n")
-
-# Concatenation
-df3 = pd.DataFrame({
-    'ID': [4, 5],
-    'Name': ['David', 'Eva']
-})
-
-print("Concatenated DataFrames:")
-print(pd.concat([df1, df3], ignore_index=True))
-print("\n")
-
-# =============================================
-# 8. Pivot Tables
-# =============================================
-
-# Create DataFrame for pivot
-df_pivot = pd.DataFrame({
-    'Date': ['2023-01-01', '2023-01-01', '2023-01-02', '2023-01-02'],
-    'City': ['NY', 'LA', 'NY', 'LA'],
-    'Temperature': [32, 75, 30, 72],
-    'Humidity': [80, 50, 85, 55]
-})
-
-print("Pivot table - mean temperature by city and date:")
-print(pd.pivot_table(df_pivot, values='Temperature', index='Date', columns='City', aggfunc='mean'))
-print("\n")
-
-# =============================================
-# 9. Time Series Operations
-# =============================================
-
-# Create time series data
-dates = pd.date_range('20230101', periods=6)
-df_time = pd.DataFrame({
-    'Date': dates,
-    'Value': np.random.randn(6)
-})
-
-print("Time series DataFrame:")
-print(df_time)
-print("\n")
-
-# Set date as index
-df_time.set_index('Date', inplace=True)
-
-# Resample (monthly mean)
-print("Resampled data (monthly mean):")
-print(df_time.resample('M').mean())
-print("\n")
-
-# =============================================
-# 10. Applying Functions
-# =============================================
-
-# Apply function to column
-df['Salary'] = df['Salary'].apply(lambda x: x * 1.05)  # 5% raise
-print("DataFrame after salary raise:")
-print(df)
-print("\n")
-
-# Apply function to each element
-print("Formatted salary:")
-print(df['Salary'].apply(lambda x: f"${x:,.2f}"))
-print("\n")
-
-
-# Apply function to multiple columns
-def age_salary_ratio(row):
-    return row['Salary'] / row['Age']
-
-
-df['Salary/Age'] = df.apply(age_salary_ratio, axis=1)
-print("DataFrame with Salary/Age ratio:")
-print(df)
-print("\n")
-
-# =============================================
-# 11. String Operations
-# =============================================
-
-# String operations on Name column
-df['Name_Upper'] = df['Name'].str.upper()
-df['Name_Length'] = df['Name'].str.len()
-print("DataFrame with string operations:")
-print(df)
-print("\n")
-
-# =============================================
-# 12. Input/Output Operations
-# =============================================
-
-# Save to CSV
-df.to_csv('output.csv', index=False)
-
-# Save to Excel
-df.to_excel('output.xlsx', index=False)
-
-# Save to JSON
-df.to_json('output.json')
-
-print("Data saved to output.csv, output.xlsx, and output.json")
-print("\n")
-
-# =============================================
-# 13. Advanced Operations
-# =============================================
-
-# Multi-indexing
-arrays = [
-    ['A', 'A', 'B', 'B'],
-    [1, 2, 1, 2]
-]
-index = pd.MultiIndex.from_arrays(arrays, names=('Letter', 'Number'))
-df_multi = pd.DataFrame({'Value': [10, 20, 30, 40]}, index=index)
-
-print("Multi-index DataFrame:")
-print(df_multi)
-print("\n")
-
-# Cross-tabulation
-print("Cross-tabulation example:")
-print(pd.crosstab(df['Name'], df['Location']))
-print("\n")
-
-# Binning
-print("Age bins:")
-print(pd.cut(df['Age'], bins=[20, 30, 40, 50]))
-print("\n")
-
-# =============================================
-# 14. Visualization (requires matplotlib)
-# =============================================
-try:
-    import matplotlib.pyplot as plt
-
-    # Plot histogram of ages
-    df['Age'].plot(kind='hist', title='Age Distribution')
-    plt.show()
-
-    # Plot bar chart of salaries
-    df.plot(x='Name', y='Salary', kind='bar', title='Salary by Name')
-    plt.show()
-
-    # Scatter plot
-    df.plot(x='Age', y='Salary', kind='scatter', title='Age vs Salary')
-    plt.show()
-except ImportError:
-    print("Matplotlib not installed. Visualization skipped.")
-print("\n")
-
-# =============================================
-# 15. Other Useful Functions
-# =============================================
-
-# Unique values
-print("Unique cities:", df['Location'].unique())
-print("\n")
-
-# Value counts
-print("City value counts:")
-print(df['Location'].value_counts())
-print("\n")
-
-# Correlation
-print("Correlation matrix:")
-print(df.corr())
-print("\n")
-
-# Memory usage
-print("Memory usage:")
-print(df.memory_usage())
-print("\n")
-
-# Replace values
-print("Replace values example:")
-print(df['Location'].replace({'NY': 'New York', 'LA': 'Los Angeles'}))
-print("\n")
-
-# Query
-print("Query example (Age > 30):")
-print(df.query('Age > 30'))
-print("\n")
-
-# Duplicates
-print("Check for duplicates:")
-print(df.duplicated())
-print("\n")
-
-# Sample rows
-print("Random sample of 2 rows:")
-print(df.sample(2))
-print("\n")
-
-# Iterate over rows
-print("Iterating over rows:")
-for index, row in df.iterrows():
-    print(f"{row['Name']} is {row['Age']} years old")
-print("\n")
-
-# =============================================
-# 16. Working with Large DataFrames
-# =============================================
-
-# Chunk processing (for large files)
-# for chunk in pd.read_csv('large_file.csv', chunksize=10000):
-#     process(chunk)
-
-# Dask can be used for out-of-core DataFrames
-# import dask.dataframe as dd
-# ddf = dd.read_csv('very_large_file.csv')
+# from pyspark.sql import SparkSession
+
+# spark = SparkSession.builder \
+#     .appName("MySQL_Read") \
+#         .config("spark.jars", r"/C:\\py_spark_installation\\hadoop\\lib\\mysql-connector-java-8.0.20.jar,C:\\py_spark_installation\\hadoop\\lib\\ojdbc8.jar")\
+#      .getOrCreate()  
+# spark.sparkContext.setLogLevel("ERROR")
+# print("omkar")
+
+# spark = SparkSession.builder \
+#     .appName("MySQL_Read") \
+#     .getOrCreate()  
+# spark.sparkContext.setLogLevel("ERROR")
+
+# model_config = spark.read.csv("C:/Users/Ashok/Desktop/data_analysis/data/model_config.csv",header=True, inferSchema=True)
+# # # model_config.show(5)
+
+# jdbc_url = "jdbc:mysql://localhost:3306/yc?useSSL=false&allowPublicKeyRetrieval=true"
+# table_name = "matches"
+# username = "root"
+# password = "root123"
+
+# df = spark.read.format("jdbc") \
+#     .option("url", jdbc_url) \
+#     .option("driver", "com.mysql.cj.jdbc.Driver") \
+#     .option("dbtable", table_name) \
+#     .option("user", username) \
+#     .option("password", password) \
+#     .load()
+
+# df.show(5)
+
+# jdbc_url = "jdbc:mysql://localhost/expo?serverTimezone=UTC&useSSL=false"
+
+# table_name = "Matches"
+# username = "omkar"
+# password = "Admin@123"
+
+# df = spark.read.format("jdbc") \
+#     .option("url", jdbc_url) \
+#     .option("driver", "com.mysql.cj.jdbc.Driver") \
+#     .option("dbtable", table_name) \
+#     .option("user", username) \
+#     .option("password", password) \
+#     .load()
+
+# df.show(5)
+
+# jdbc_url = "jdbc:mysql://localhost:3306/company?serverTimezone=UTC&useSSL=false"
+# jdbc_url = "jdbc:mysql://localhost/expo?useSSL=false&allowPublicKeyRetrieval=true"
+# table_name = "Matches"
+# username = "omkar"
+# password = "Admin@123"
+
+# df = spark.read.format("jdbc") \
+#     .option("url", jdbc_url) \
+#     .option("driver", "com.mysql.cj.jdbc.Driver") \
+#     .option("dbtable", table_name) \
+#     .option("user", username) \
+#     .option("password", password) \
+#     .load()
+
+# df.show(5)
+# 1 csv file-
+
+# df=spark.read.csv("C:\omkar\Excel\matches 1.csv",header=True,inferSchema=True)
+# df.show()
+
+
+# # With delimiter(text.csv)
+# df_csv = spark.read.option("delimiter", ",").csv("C:\omkar\project file\Mobile_Sales_1.txt", header=True, inferSchema=True)
+# df_csv.show()
+
+
+# 2.Excel file:- 
+
+# spark = SparkSession.builder \
+#     .appName("ExcelExample") \
+#     .config("spark.jars.packages", "com.crealytics:spark-excel_2.12:0.13.7") \
+#     .getOrCreate()
+
+# df_excel = spark.read.format("com.crealytics.spark.excel") \
+#     .option("header", "true") \
+#     .option("inferSchema", "true") \
+#     .load("path/to/yourfile.xlsx")
+
+# df_excel.show()
+
+
+# 4.Json file:- 
+
+# # Simple JSON
+# df_json = spark.read.json("path/to/yourfile.json")
+# df_json.show()
+
+# # Multiline JSON
+# df_json = spark.read.option("multiline", True).json("path/to/yourfile.json")
+# df_json.show()
+
+
+# 5.Text file:- 
+
+# # Each line as one record
+# df_text = spark.read.text("path/to/yourfile.txt")
+# df_text.show(truncate=False)
+
+# # For delimited text (e.g., tab-separated)
+# df_text = spark.read.option("delimiter", "\t").csv("path/to/yourfile.txt", header=True, inferSchema=True)
+# df_text.show()
+
+
+# # 6.Mysql database:- 
+
+# df = spark.read.format("jdbc") \
+#     .option("url", "jdbc:mysql://localhost/new") \
+#     .option("driver", "com.mysql.cj.jdbc.Driver") \
+#     .option("dbtable", "Match01") \
+#     .option("user", "ashok") \
+#     .option("password", "Admin@123") \
+#     .load()
+
+# df.show(5)
+
+
+# 7.Oracle database:- 
+
+# df_oracle = spark.read.format("jdbc") \
+#     .option("url", "jdbc:oracle:thin:@//hostname:1521/servicename") \
+#     .option("driver", "oracle.jdbc.driver.OracleDriver") \
+#     .option("dbtable", "your_table_name") \
+#     .option("user", "your_username") \
+#     .option("password", "your_password") \
+#     .load()
+
+# df_oracle.show()
+
+
+# 8.Write data to external files:- 
+
+# # Example transformation
+# df=df_csv.select("id", "name") \
+#     .filter(df_csv["id"] > 100) \
+#     .show()
+
+# # Save back as CSV or Parquet
+# df.write.mode("overwrite").csv("output/path/csv_output")
+# df.write.mode("overwrite").parquet("output/path/parquet_output")
+
+
+# ***********Analysis*****************
+
+# 1.Basic DataFrame Info:- 
+
+# # Show first few records
+# df.show(5)
+
+# # Display all rows fully (use cautiously for large data)
+# df.show(truncate=False)
+
+# # Print DataFrame schema (column names and types)
+# df.printSchema()
+
+# # Get column names
+# print("total columns",df.columns)
+
+# # Get number of columns
+# print(len(df.columns))
+
+# # # Count total number of rows
+# print(df.count())
+
+# # Get DataFrame summary statistics
+# df.describe().show()
+
+# # Extended summary (mean, stddev, min, max, etc.)
+# df.summary().show()
+
+
+# 2.Schema & Data Types Validation
+
+# # Show detailed schema as StructType
+# print(df.schema)
+
+# # Get specific column data type
+# df.dtypes
+
+# # Verify column data types
+# from pyspark.sql import functions as f
+# print(df.select([f.col(c).cast("string").alias(c) for c in df.columns]).printSchema())
+
+
+# 3.Data Quality Checks
+
+
+# from pyspark.sql import functions as F
+
+# # Check for null values in each column
+# df.select([F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in df.columns]).show()
+
+# # Count distinct values per column
+# df.select([F.countDistinct(F.col(c)).alias(c) for c in df.columns]).show()
+
+# # Find duplicate rows
+# df.groupBy(df.columns).count().filter("count > 1").show()
+
+# # Drop duplicate rows
+# df_no_dup = df.dropDuplicates()
+
+# # Check for blank strings
+# df.filter(F.col("Winner") == "").count()
+
+# # Replace nulls with default value
+# df.fillna({"city": "satara"}).show()
+
+
+
+
+
+# 4.Exploratory Data Analysis (EDA)
+
+# # View top N values of a column
+# df.groupBy("city").count().orderBy(F.desc("count")).show(10)
+
+# # Get distinct values of a column
+# df.select("city").distinct().show()
+
+# # Frequency count (value distribution)
+# df.groupby("city").agg(F.count("*").alias("count")).show()
+
+# # Min, Max, Mean, StdDev
+# df.select(
+#     F.min("numeric_col").alias("min"),
+#     F.max("numeric_col").alias("max"),
+#     F.mean("numeric_col").alias("mean"),
+#     F.stddev("numeric_col").alias("stddev")
+# ).show()
+
+# # Correlation between numeric columns
+# df.stat.corr("col1", "col2")
+
+
+
+# 5.Filtering & Sampling
+
+
+# # Filter rows
+# df.filter(df["age"] > 30).show()
+# df.filter((df["salary"] > 50000) & (df["gender"] == "M")).show()
+
+# # Random sample
+# df.sample(withReplacement=False, fraction=0.1).show()
+
+# # Take first few rows as list
+# df.take(5)
+
+
+
+
+# 6.Column-Level Analysis
+
+
+# # Add new calculated column
+# df = df.withColumn("increment_value", F.col("salary") * 0.1)
+
+# # Rename column
+# df = df.withColumnRenamed("old_name", "new_name")
+
+# # Drop columns
+# df = df.drop("unwanted_col")
+
+# # Cast data type
+# df = df.withColumn("age", F.col("age").cast("int"))
+
+# # Get summary per group
+# df.groupBy("department").agg(F.avg("salary").alias("avg_salary")).show()
+
+# #create temporary view 
+
+# df.createOrReplaceTempView("employee")
+# df1=spark.sql("select * from employee")
+
+# df1.show() 
+
+# 7.Save Validation Results
+
+
+
+# # Save as CSV
+# df.write.mode("overwrite").csv("output/validated_data")
+
+# # Save as Parquet
+# df.write.mode("overwrite").parquet("output/validated_data_parquet")
+
+
+# ***********Optimization of technique pyspark********************
+
+from pyspark.sql import SparkSession
+spark=SparkSession.builder\
+     .appName("Mysql Read")\
+     .getOrCreate()
+sc=spark.sparkContext
+
+#    data frame 
+# dict=[("BscI","MscI"),("BscII",'MscII'),("Bsc III","NA")]
+# columns=["BSC","MSC"]
+# dict_RDD =[("omkar","satara"),("ashok","Beed")]
+# columns=["name","address"]
+# expo=spark.createDataFrame(dict,columns)
+# expo.show()
+
+l=[10,25,32,39,45,59,72]
+rdd=sc.parallelize(l)
+# print(rdd.collect())  
+# aa=rdd.distinct()
+# print(aa.collect())
+
+S
